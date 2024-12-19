@@ -37,6 +37,16 @@ new_date = my_date + datetime.timedelta(days=7)
 
 new_date.strftime("%m/%d/%Y")
 
+
+# даавгавар 4 
+
+A = float()
+K = float()
+L = float()
+
+f = A*(K**0.3)*(L**0.7)
+
+
 # Даалгавар 5 dictionary
 
 a_dict = {"ner": "bat"}
