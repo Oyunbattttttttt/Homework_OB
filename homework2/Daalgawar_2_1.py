@@ -38,3 +38,33 @@ new_date = my_date + datetime.timedelta(days=7)
 new_date.strftime("%m/%d/%Y")
 
 # Даалгавар 5 dictionary
+
+a_dict = {"ner": "bat"}
+bat_dict = {"ner": "bat", "huis": "er", "tsalin": 2500000 ,"tursun ognoo": 2000/10/31}
+
+b_dict = {"ner": "bold"}
+bold_dict = {"ner": "bold", "huis": "er", "tsalin": 2800000 ,"tursun ognoo": 2002/10/31}
+
+c_dict = {"ner": "dondog"}
+dondog_dict = {"ner": "dondog", "huis": "er", "tsalin": 2000000 ,"tursun ognoo": 2003/10/31}
+
+d_dict = {"ner": "dulam"}
+dulam_dict = {"ner": "dulam", "huis": "em", "tsalin": 2500000 ,"tursun ognoo": 2006/10/31}
+
+e_dict = {"ner": "tsetseg"}
+tsetseg_dict = {"ner": "tsetseg", "huis": "em", "tsalin": 2600000 ,"tursun ognoo": 2005/10/31}
+
+customer_dict ={"1": bat_dict,"2": bold_dict,"3": dondog_dict,"4": dulam_dict,"5": tsetseg_dict}
+
+
+
+customer_dict.keys()
+
+import pandas as pd
+
+datadict = {'ner':["bat" ,"bold" ,"dondog", "dulam", "tsetseg"] ,'huis':["er" ,"er" ,"er", "em", "em"] ,'tsalin':["2500000" ,"2800000" ,"2000000", "2500000", "2600000"] ,'tursun ognoo':["2000/10/31" ,"2002/10/31" ,"2003/10/31", "2006/10/31", "2005/10/31"]}
+
+
+
+df = pd.DataFrame(datadict)
+
