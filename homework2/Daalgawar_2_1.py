@@ -62,9 +62,15 @@ customer_dict.keys()
 
 import pandas as pd
 
+
 datadict = {'ner':["bat" ,"bold" ,"dondog", "dulam", "tsetseg"] ,'huis':["er" ,"er" ,"er", "em", "em"] ,'tsalin':["2500000" ,"2800000" ,"2000000", "2500000", "2600000"] ,'tursun ognoo':["2000/10/31" ,"2002/10/31" ,"2003/10/31", "2006/10/31", "2005/10/31"]}
 
 
+datadict = {
+    'ner':["bat" ,"bold" ,"dondog", "dulam", "tsetseg"] ,
+    'huis':["er" ,"er" ,"er", "em", "em"] ,
+    'tsalin':["2500000" ,"2800000" ,"2000000", "2500000", "2600000"] ,
+    'tursun ognoo':["2000/10/31" ,"2002/10/31" ,"2003/10/31", "2006/10/31", "2005/10/31"]
+    }
 
 df = pd.DataFrame(datadict)
-
