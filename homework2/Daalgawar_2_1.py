@@ -40,6 +40,7 @@ new_date.strftime("%m/%d/%Y")
 
 # даавгавар 4 
 
+# NUMPY СУДЛАХ
 A = float()
 K = float()
 L = float()
