@@ -41,18 +41,56 @@ print(df_cleaned)
 # Хөдөлгөөнт бус тээврийн хэрэгслийг устгав
 
 df_cleaned_1 = df_cleaned[df_cleaned['Тээврийн төрөл'] != 'Хөдөлтгөөнт бус тээвэр']
-df_cleaned_1['Тээврийн төрөл']
-df_cleaned_1['Тээврийн төрөл'].unique()
-df_cleaned_1['Хил дээрх тээврийн хэрэгсэл'].unique()
-df_cleaned_1['Чингэлгийн дугаар'].unique()
-print(df_cleaned_1)
 
+# Барааны кодоор filter хийх алхам бэлтгэв
+# Бинзен код 
+df_cleaned_1.loc[:, 'Len_1'] = df_cleaned_1['Барааны код'].astype(str).str[:5]
+
+# Чингэлгийн дугаар дээр AIR болон FCL -г ялгав.
 df_cleaned_1.loc[df_cleaned_1['Чингэлгийн дугаар'].astype(str).str.len() >= 11, 'Тээврийн төрөл_01'] = 'FCL'
-df_cleaned_1.loc[df_cleaned_1['Чингэлгийн дугаар'].astype(str).str.len() == 8, 'Тээврийн төрөл_01'] = 'AIR'
 
-df_cleaned_1['Тээврийн төрөл_01'].unique()
+df_cleaned_1.loc[
+    (df_cleaned_1['Чингэлгийн дугаар'].astype(str).str.len() == 8) &
+    (df_cleaned_1['Len_1'].astype(str) != "27101"),
+    'Тээврийн төрөл_01'
+] = 'AIR'
+
+# Тээврийн хэрэгслийн дугаараар FTl -г ялгав
+df_cleaned_1.loc[
+    (df_cleaned_1['Хил дээрх тээврийн хэрэгсэл'].astype(str).str.len() <= 7) & 
+    (df_cleaned_1['Len_1'].astype(str) != "27101") &
+    (df_cleaned_1['Тээврийн төрөл_01'].isna()), 
+    'Тээврийн төрөл_01'
+] = 'FTL'
+
+df_cleaned_1.loc[
+    (df_cleaned_1['Хил дээрх тээврийн хэрэгсэл'].astype(str).str.len() >= 9) & 
+    (df_cleaned_1['Len_1'].astype(str) != "27101") &
+    (df_cleaned_1['Тээврийн төрөл_01'].isna()), 
+    'Тээврийн төрөл_01'
+] = 'FTL'
+
+df_cleaned_1.loc[
+    (df_cleaned_1['Хил дээрх тээврийн хэрэгсэл'].astype(str).str.len() == 8) & 
+    (df_cleaned_1['Гарал үүсэл'].astype(str) == "ОХУ") &
+    (df_cleaned_1['Len_1'].astype(str) == "27101") &
+    (df_cleaned_1['Тээврийн төрөл_01'].isna()), 
+    'Тээврийн төрөл_01'
+] = 'WGN'
+
+df_cleaned_1.loc[
+    (df_cleaned_1['Гарал үүсэл'].astype(str) == "ОХУ") &
+    (df_cleaned_1['Len_1'].astype(str) == "27101") &
+    (df_cleaned_1['Тээврийн төрөл_01'].isna()), 
+    'Тээврийн төрөл_01'
+] = 'WGN'
 
 
+
+df_cleaned_1.loc[
+    (df_cleaned_1['Тээврийн төрөл_01'].isna()), 
+    'Тээврийн төрөл_01'
+] = 'FTL'
 
 
 # Чингэлэг дугаартай бол FCL болон LCL түр ангилруу хийх
