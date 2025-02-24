@@ -25,6 +25,7 @@ df[cols[:5]]
 df[cols[:10]]
 df[cols[10:20]]
 df[cols[20:30]]
+
 df_cleaned_1[cols[50:60]]
 
 
@@ -41,7 +42,7 @@ df.isna().sum(axis=1)
 
 # Duplicates
 # Барааны төрлөөр давхардсан мэдээллийг устгах
-df_cleaned = df.drop_duplicates(subset=['Хил дээрх тээврийн хэрэгсэл', 'Тээврийн төрөл','Хүлээн авагч','Зөвшөөрсөн/ Татгалзсан огноо', 'Чингэлгийн дугаар' ,'Илгээгч улс','Мэдүүлсэн огноо'],keep='first')
+df_cleaned = df.drop_duplicates(subset=['Хил дээрх тээврийн хэрэгсэл', 'Тээврийн төрөл','Хүлээн авагч','Зөвшөөрсөн/ Татгалзсан огноо', 'Чингэлгийн дугаар' ,'Илгээгч улс',],keep='first')
 
 # Display the result
 print(df_cleaned)
@@ -51,9 +52,12 @@ print(df_cleaned)
 df_cleaned_1 = df_cleaned[df_cleaned['Тээврийн төрөл'] != 'Хөдөлтгөөнт бус тээвэр']
 
 # Барааны кодоор filter хийх алхам бэлтгэв
-# Бинзен код 
+# Бинзен код түүв
 df_cleaned_1.loc[:, 'Len_1'] = df_cleaned_1['Барааны код'].astype(str).str[:5]
 
+# Чингэлгийн дугаар дээрх 00-г ялгав
+df_cleaned_1['Чингэлгийн дугаар'] = df_cleaned_1['Чингэлгийн дугаар'].replace("00", np.nan)
+df_cleaned_1['Чингэлгийн дугаар'] = df_cleaned_1['Чингэлгийн дугаар'].replace("0", np.nan)
 # Чингэлгийн дугаар дээр AIR болон FCL -г ялгав.
 df_cleaned_1.loc[df_cleaned_1['Чингэлгийн дугаар'].astype(str).str.len() >= 11, 'Тээврийн төрөл_01'] = 'FCL'
 
@@ -98,6 +102,53 @@ df_cleaned_1.loc[
     'Тээврийн төрөл_01'
 ] = 'FTL'
 
+# FCL ялгав
+
+
+df_cleaned_1['count_Чингэлгийн дугаар'] = df_cleaned_1.groupby(
+    [df_cleaned_1['date_column'].dt.to_period('M'), 'Тээврийн төрөл_01', 'Чингэлгийн дугаар']
+)['Чингэлгийн дугаар'].transform('count')
+
+df_cleaned_1['count_Тээврийн төрөл_01'] = df_cleaned_1.groupby(
+    [df_cleaned_1['date_column'].dt.to_period('M'), 'Тээврийн төрөл_01', 'Чингэлгийн дугаар']
+)['Тээврийн төрөл_01'].transform('count')
+
+df_cleaned_1['count_Хүлээн авагч'] = df_cleaned_1.groupby(
+    [df_cleaned_1['date_column'].dt.to_period('M'), 'Хүлээн авагч', 'Чингэлгийн дугаар']
+)['Хүлээн авагч'].transform('count')
+
+df_cleaned_1['count_Зөвшөөрсөн/ Татгалзсан огноо'] = df_cleaned_1.groupby(
+    [df_cleaned_1['date_column'].dt.to_period('M'), "Зөвшөөрсөн/ Татгалзсан огноо", 'Чингэлгийн дугаар']
+)["Зөвшөөрсөн/ Татгалзсан огноо"].transform('count')
+
+# Тээврийн төрөл FCL болон Date column 2 сард 1-с дээш орсон бол LCL гэж ялгав
+
+df_cleaned_1.loc[
+    ((df_cleaned_1['count_Чингэлгийн дугаар'] >= 2)) & 
+    ((df_cleaned_1['count_Тээврийн төрөл_01'] >= 2)) &
+    ((df_cleaned_1['count_Зөвшөөрсөн/ Татгалзсан огноо'] >= 2)) &
+    (df_cleaned_1['Тээврийн төрөл_01'] == "FCL"),
+    'Тээврийн төрөл_2'
+] = 'LCL'
+df_cleaned_1['Тээврийн төрөл_2'].fillna('', inplace=True)
+
+df_cleaned_1['count_Чингэлгийн дугаар']
+df_cleaned_1['count_Тээврийн төрөл_01']
+df_cleaned_1['count_Зөвшөөрсөн/ Татгалзсан огноо']
+
+# pivot dataframe 
+
+df_pivot = df.pivot(index='Date', columns='Product', values='Sales')
+df.pivot_table(index='Date', columns='Product', values='Sales', aggfunc='sum')
+
+
+# 2 data frame 1 excel 
+# Create an Excel writer object
+with pd.ExcelWriter("output.xlsx") as writer:
+    df1.to_excel(writer, sheet_name="Sheet1", index=False)  # Export df1 to "Sheet1"
+    df2.to_excel(writer, sheet_name="Sheet2", index=False)  # Export df2 to "Sheet2"
+
+print("Excel file created successfully!")
 
 # Чингэлэг дугаартай бол FCL болон LCL түр ангилруу хийх
 # - Duplicate -  Ner , on sar , ilgeegch , Uls ,Teewrin turul ,Teewriin heregsel
@@ -109,7 +160,7 @@ df_cleaned_1.loc[
 #- Uldsengees awtin dugartaig LTL FTL /oros mashinuu dugaar ur bdag/
 #- Angilalgui bol orj irsen gaalin baiguullagin codoor huun zamiin uudes busdig ftl ltl angilalruu hiih
 #-  1 chingeleg tuhain sard 2 haritlsagch tai import hiigdsen bol tuuwer/ustgalt hiigdeh/
-#- busad tohioldold buten chingeleg/ustgalt/
+#- busad tohioldold buten chingeleg/ustgalt/w
 
 #Uldegdel
 #- dizel tulshig tusdan baraanii kodoor yalgan wagon talbart
@@ -119,3 +170,5 @@ df_cleaned_1.loc[
 
 # excel export
 df_cleaned_1.to_excel("output_file.xlsx", index=False)
+
+BEAU5373832
