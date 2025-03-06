@@ -132,23 +132,7 @@ df_cleaned_1.loc[
 ] = 'LCL'
 df_cleaned_1['Тээврийн төрөл_2'].fillna('', inplace=True)
 
-df_cleaned_1['count_Чингэлгийн дугаар']
-df_cleaned_1['count_Тээврийн төрөл_01']
-df_cleaned_1['count_Зөвшөөрсөн/ Татгалзсан огноо']
 
-# pivot dataframe 
-
-df_pivot = df.pivot(index='Date', columns='Product', values='Sales')
-df.pivot_table(index='Date', columns='Product', values='Sales', aggfunc='sum')
-
-
-# 2 data frame 1 excel 
-# Create an Excel writer object
-with pd.ExcelWriter("output.xlsx") as writer:
-    df1.to_excel(writer, sheet_name="Sheet1", index=False)  # Export df1 to "Sheet1"
-    df2.to_excel(writer, sheet_name="Sheet2", index=False)  # Export df2 to "Sheet2"
-
-print("Excel file created successfully!")
 
 # Чингэлэг дугаартай бол FCL болон LCL түр ангилруу хийх
 # - Duplicate -  Ner , on sar , ilgeegch , Uls ,Teewrin turul ,Teewriin heregsel
@@ -172,3 +156,17 @@ print("Excel file created successfully!")
 df_cleaned_1.to_excel("output_file.xlsx", index=False)
 
 BEAU5373832
+
+# pivot dataframe 
+
+df_pivot = df.pivot(index='Date', columns='Product', values='Sales')
+df.pivot_table(index='Date', columns='Product', values='Sales', aggfunc='sum')
+
+
+# 2 data frame 1 excel 
+# Create an Excel writer object
+with pd.ExcelWriter("output.xlsx") as writer:
+    df1.to_excel(writer, sheet_name="Sheet1", index=False)  # Export df1 to "Sheet1"
+    df2.to_excel(writer, sheet_name="Sheet2", index=False)  # Export df2 to "Sheet2"
+
+print("Excel file created successfully!")

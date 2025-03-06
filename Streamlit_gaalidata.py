@@ -47,3 +47,38 @@ fig = px.bar(df_out_month, x="month", y="Len_1",color="transport_type", title="M
 # Display the plot
 st.plotly_chart(fig, use_container_width=True)
 st.dataframe(df_out)
+
+
+# Login хийх
+
+import streamlit as st
+
+# Set a predefined passcode
+PASSCODE = "1234"  # Change this to your desired passcode
+
+# Initialize session state for authentication
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+# Login form
+if not st.session_state.authenticated:
+    st.title("Login")
+    passcode = st.text_input("Enter Passcode:", type="password")
+    
+    if st.button("Login"):
+        if passcode == PASSCODE:
+            st.session_state.authenticated = True
+            st.success("Login successful!")
+            st.experimental_rerun()
+        else:
+            st.error("Incorrect passcode. Try again.")
+
+# Protected content
+if st.session_state.authenticated:
+    st.title("Welcome to Your App!")
+    st.write("This is a protected area.")
+    
+    # Logout button
+    if st.button("Logout"):
+        st.session_state.authenticated = False
+        st.experimental_rerun()
