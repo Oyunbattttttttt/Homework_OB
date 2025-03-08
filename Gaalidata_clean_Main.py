@@ -212,16 +212,6 @@ df_cleaned_1.to_excel("output_file1.xlsx", index=False)
 
 
 
-
-
-
-
-
-
-
-
-
-
 # pivot dataframe 
 
 df_pivot = df.pivot(index='Date', columns='Product', values='Sales')
