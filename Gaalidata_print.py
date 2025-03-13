@@ -32,7 +32,6 @@ df.tail()  # last 5 rows
 
 # Split the data into 3 parts
 cols = df.columns
-cols1 = df_cleaned_1.columns
 df.info() # data types and missing values
 ## NA Check for missing values
 df.isna()
