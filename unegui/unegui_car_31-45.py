@@ -16,9 +16,13 @@ def collect_data(driver):
     data['price'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div/section[1]/div/div[3]/div/div[1]/div[1]/div/div').text
     
     try:
-        data['ad_text'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[5]/div/p').text
-    except: 
-        data['ad_text'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[6]/div/p').text
+        data['ad_text'] = driver.find_element(By.XPATH, '/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[5]/div/p').text
+    
+    except:
+        try:
+            data['ad_text'] = driver.find_element(By.XPATH, '/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[6]/div/p').text
+        except:
+            data['ad_text'] = None  # Or empty string "" if you prefer
 
 
     print(data['title'])
@@ -38,7 +42,7 @@ def collect_data(driver):
     return data 
 
 def collect_ad(ad_number):
-    main_url = 'https://www.unegui.mn/avto-mashin/-avtomashin-zarna/'
+    main_url = 'https://www.unegui.mn/avto-mashin/-avtomashin-zarna/?page=5'
 
     driver = webdriver.Chrome()
     driver.get(main_url)
@@ -48,10 +52,11 @@ def collect_ad(ad_number):
 
     return data
 
-ad_list = range(30,45)
+ad_list = range(29,45)
 
-results = Parallel(n_jobs=-1)(delayed(collect_ad)(n) for n in ad_list)
+results = Parallel(n_jobs=3)(delayed(collect_ad)(n) for n in ad_list)
 # Save to dataframe
 df = pd.DataFrame(results)  
 # Save to csv
 df.to_csv('unegui/unegui_ads_3.csv', index=False, encoding='utf-8-sig') 
+
