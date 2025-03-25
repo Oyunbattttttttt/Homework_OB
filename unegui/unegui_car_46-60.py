@@ -42,7 +42,7 @@ def collect_data(driver):
     return data 
 
 def collect_ad(ad_number):
-    main_url = 'https://www.unegui.mn/avto-mashin/-avtomashin-zarna/?page=5'
+    main_url = 'https://www.unegui.mn/avto-mashin/-avtomashin-zarna/?page=1'
 
     driver = webdriver.Chrome()
     driver.get(main_url)
@@ -52,7 +52,7 @@ def collect_ad(ad_number):
 
     return data
 
-ad_list = range(44,61)
+ad_list = range(43,61)
 
 results = Parallel(n_jobs=4)(delayed(collect_ad)(n) for n in ad_list)
 # Save to dataframe
