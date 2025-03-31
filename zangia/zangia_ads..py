@@ -9,52 +9,58 @@ from joblib import Parallel, delayed # pip install joblib
 
 def collect_data(driver):
     data = {}
-    data['title'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[1]/h1').text
-    data['location'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[1]/div[2]/div/a/span').text
-    data['date'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[1]/div[2]/div/div[1]/span[1]').text
-    data['id'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[1]/div[2]/div/div[1]/span[2]/span').text
-    data['price'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div/section[1]/div/div[3]/div/div[1]/div[1]/div/div').text
-    
+    data['title'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[2]/div/div[3]/div/div[1]/div/h3').text
+    data['company'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[2]/div/div[1]/div[1]/div[2]/p').text
+    data['wage'] = driver.find_element(By.XPATH,'/html/body/div[2]/div[2]/div/div[3]/div/div[1]/div/div[1]/div').text
+   
     try:
-        data['ad_text'] = driver.find_element(By.XPATH, '/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[5]/div/p').text
+        data['location'] = driver.find_element(By.XPATH, '/html/body/div[2]/div[2]/div/div[3]/div/div[1]/div/div[5]/div/div[1]/span').text
     
     except:
         try:
-            data['ad_text'] = driver.find_element(By.XPATH, '/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[6]/div/p').text
+            data['location'] = driver.find_element(By.XPATH, '/html/body/div[2]/div[2]/div/div[3]/div/div[1]/div/div[4]/div/div[1]/span').text
         except:
-            data['ad_text'] = None  # Or empty string "" if you prefer
+            data['location'] = None  # Or empty string "" if you prefer
 
-    print(data['title'])
+    try:
+        data['sector'] = driver.find_element(By.XPATH, '/html/body/div[2]/div[2]/div/div[3]/div/div[1]/div/div[5]/div/div[2]/span').text
+    
+    except:
+        try:
+            data['sector'] = driver.find_element(By.XPATH, '/html/body/div[2]/div[2]/div/div[3]/div/div[1]/div/div[4]/div/div[2]/span').text
+        except:
+            data['sector'] = None  # Or empty string "" if you prefer
 
-    atts = driver.find_elements(By.XPATH,'/html/body/div[2]/div[3]/div/section[1]/div/div[2]/div[1]/div[4]/ul/li')
 
-    for att in atts:
-        try: 
-            key  = att.find_element(By.XPATH, 'span[1]').text
-            val  = att.find_element(By.XPATH, 'span[2]').text
-        except: 
-            key  = att.find_element(By.XPATH, 'span').text
-            val  = att.find_element(By.XPATH, 'a').text
-        print(key, val)
-        data[key] = val
+    try:
+        data['level'] = driver.find_element(By.XPATH, '/html/body/div[2]/div[2]/div/div[3]/div/div[1]/div/div[5]/div/div[3]/span').text
+    
+    except:
+        try:
+            data['level'] = driver.find_element(By.XPATH, '/html/body/div[2]/div[2]/div/div[3]/div/div[1]/div/div[4]/div/div[3]/span').text
+        except:
+            data['level'] = None  # Or empty string "" if you prefer
 
     return data 
 
+
+
 def collect_ad(ad_number):
-    main_url = 'https://www.unegui.mn/avto-mashin/-avtomashin-zarna/?page=2'
+    main_url = 'https://www.zangia.mn/'
 
     driver = webdriver.Chrome()
     driver.get(main_url)
 
-    driver.find_element(By.XPATH, f"/html/body/div[2]/div[3]/section/div[2]/div[1]/div[2]/div[2]/div[{ad_number}]/div[2]/a").click()
+    driver.find_element(By.XPATH, f"/html/body/div[2]/div[2]/div/div[3]/div[3]/div[1]/div[{ad_number}]/div[2]/a").click()
+
     data = collect_data(driver)
 
     return data
 
-ad_list = range(1,61)
+ad_list = range(1,81)
 
 results = Parallel(n_jobs=2)(delayed(collect_ad)(n) for n in ad_list)
 # Save to dataframe
 df = pd.DataFrame(results)  
 # Save to csv
-df.to_csv('unegui/unegui_ads_1.csv', index=False, encoding='utf-8-sig') 
+df.to_csv('zangia/unegui_ads_1.csv', index=False, encoding='utf-8-sig') 
