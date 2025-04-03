@@ -16,9 +16,15 @@ df4 = pd.read_excel(main_path + 'data4.xlsx', engine='openpyxl')
 df5 = pd.read_excel(main_path + 'data5.xlsx', engine='openpyxl')
 df6 = pd.read_excel(main_path + 'data6.xlsx', engine='openpyxl')
 df7 = pd.read_excel(main_path + 'data7.xlsx', engine='openpyxl')
+df8 = pd.read_excel(main_path + 'data8.xlsx', engine='openpyxl')
+df9 = pd.read_excel(main_path + 'data9.xlsx', engine='openpyxl')
+df10 = pd.read_excel(main_path + 'data10.xlsx', engine='openpyxl')
+df11 = pd.read_excel(main_path + 'data11.xlsx', engine='openpyxl')
+df12 = pd.read_excel(main_path + 'data12.xlsx', engine='openpyxl')
+df13 = pd.read_excel(main_path + 'data13.xlsx', engine='openpyxl')
 
 
-df = pd.concat([df1, df2,df3, df4 , df5, df6, df7], ignore_index=True)
+df = pd.concat([df1, df2,df3, df4 , df5, df6, df7, df8, df9, df10, df11, df12, df13], ignore_index=True)
 cols = df.columns
 
 # Duplicates шалгах
@@ -37,5 +43,6 @@ df.drop_duplicates(subset=['title', 'id',
        ], keep='first',inplace=True)
 
 df['id'].duplicated().sum()
+df_sort = df.sort_values(by="date_clean", ascending=True)
 
-df.to_excel("unegui/data/output_file1.xlsx", index=False)
+df_sort.to_excel("unegui/data/202503.xlsx", index=False)

@@ -46,21 +46,21 @@ def collect_data(driver):
 
 
 def collect_ad(ad_number):
-    main_url = 'https://www.zangia.mn/'
+    main_url = 'https://www.zangia.mn/job/list/lmt.500'
 
     driver = webdriver.Chrome()
     driver.get(main_url)
 
-    driver.find_element(By.XPATH, f"/html/body/div[2]/div[2]/div/div[3]/div[3]/div[1]/div[{ad_number}]/div[2]/a").click()
+    driver.find_element(By.XPATH, f"/html/body/div[2]/div[2]/div/div[3]/div[2]/div[3]/div[{ad_number}]/div[2]/a").click()
 
     data = collect_data(driver)
 
     return data
 
-ad_list = range(1,10)
+ad_list = range(1,500)
 
-results = Parallel(n_jobs=2)(delayed(collect_ad)(n) for n in ad_list)
+results = Parallel(n_jobs=2)(delayed(collect_ad)(n) for n in ad_list) 
 # Save to dataframe
-df = pd.DataFrame(results)
+df = pd.DataFrame(results)  
 # Save to csv
-df.to_csv('zangia/zangia_ads_1.csv', index=False, encoding='utf-8-sig') 
+df.to_csv('zangia/zangia_ads_2.csv', index=False, encoding='utf-8-sig') 
