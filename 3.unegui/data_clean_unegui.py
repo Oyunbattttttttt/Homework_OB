@@ -5,7 +5,7 @@ from datetime import datetime
 pd.options.mode.chained_assignment = None
 
 
-main_path = 'unegui/'
+main_path = '3.unegui/'
 df1 = pd.read_csv(main_path + 'unegui_ads_1.csv')
 df2 = pd.read_csv(main_path + 'unegui_ads_2.csv')
 df3 = pd.read_csv(main_path + 'unegui_ads_3.csv')
@@ -13,7 +13,7 @@ df4 = pd.read_csv(main_path + 'unegui_ads_4.csv')
 df5 = pd.read_csv(main_path + 'unegui_ads_5.csv')
 
 
-df = pd.concat([df1, df2,df3, df4 ,df5], ignore_index=True)
+df = pd.concat([df1, df2,df3,df4,df5], ignore_index=True)
 cols = df.columns
 
 # Огноо янзлав
@@ -51,7 +51,7 @@ df['title'] = df['title'].apply(lambda x: x.split(',')[0].strip())
 df['Явсан:'] = df['Явсан:'].str.replace("км", "").str.strip()
 
 # Print
-df.to_excel("unegui/output_file1.xlsx", index=False)
+df.to_excel("3.unegui/output_file1.xlsx", index=False)
 
 
 
