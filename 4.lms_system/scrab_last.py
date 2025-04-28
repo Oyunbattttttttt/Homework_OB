@@ -48,8 +48,10 @@ def collect_ad_details(driver):
             data['Agent_4'] = None
 
     
-    data['start'] = driver.find_element(By.XPATH,'/html/body/app-root/app-main-layout/div/div[2]/div[1]/div/div/app-freight-operation/div/mat-sidenav-container/mat-sidenav-content/div[3]/div[2]/app-agent-inquiry/div/div[1]/div[2]/div/div/div[1]/div[1]').text
-
+    try:
+        data['start'] = driver.find_element(By.XPATH,'/html/body/app-root/app-main-layout/div/div[2]/div[1]/div/div/app-freight-operation/div/mat-sidenav-container/mat-sidenav-content/div[3]/div[2]/app-agent-inquiry/div/div[1]/div[2]/div/div/div[1]/div[1]').text
+    except:
+        data['start'] = None
 
     return data
 
@@ -158,4 +160,4 @@ for ad_number in df['ad_number']:
 
 df = pd.DataFrame(datalist)
 
-df.to_csv('unegui_ads_3.csv',encoding='utf-8-sig')
+df.to_csv('unegui_ads.csv',encoding='utf-8-sig')
