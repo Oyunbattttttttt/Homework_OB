@@ -60,7 +60,12 @@ def collect_ad_details(driver):
     try:
         data['start'] = driver.find_element(By.XPATH,'/html/body/app-root/app-main-layout/div/div[2]/div[1]/div/div/app-freight-operation/div/mat-sidenav-container/mat-sidenav-content/div[3]/div[2]/app-agent-inquiry/div/div[1]/div[2]/div/div/div[1]/div[1]').text
     except:
-        data['start'] = None
+        try:
+            data['start'] = driver.find_element(By.XPATH,'/html/body/app-root/app-main-layout/div/div[2]/div[1]/div/div/app-freight-operation/div/mat-sidenav-container/mat-sidenav-content/div[4]/div[2]/app-agent-inquiry/div/div[1]/div[2]/div/div/div[1]/div[1]').text
+        except:
+            data['start'] = None
+
+
 
     return data
 
