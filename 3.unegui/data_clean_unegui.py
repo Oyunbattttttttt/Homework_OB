@@ -13,7 +13,7 @@ df4 = pd.read_csv(main_path + 'unegui_ads_4.csv')
 df5 = pd.read_csv(main_path + 'unegui_ads_5.csv')
 
 
-df = pd.concat([df1, df2,df3,df4,df5], ignore_index=True)
+df = pd.concat([df1, df2,df3,], ignore_index=True)
 cols = df.columns
 
 # Огноо янзлав
