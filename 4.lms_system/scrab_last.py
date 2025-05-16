@@ -160,4 +160,4 @@ for ad_number in df['ad_number']:
 
 df = pd.DataFrame(datalist)
 
-df.to_csv('unegui_ads.csv',encoding='utf-8-sig')
+df.to_csv('lms_ads.csv',encoding='utf-8-sig')
